@@ -1,0 +1,41 @@
+{% if language == "python" %}
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ .
+
+EXPOSE 8080
+CMD ["python", "main.py"]
+{% elif language == "go" %}
+FROM golang:1.21-alpine AS builder
+
+WORKDIR /app
+COPY src/ .
+RUN go mod download && go build -o /bin/{{ service_name }} .
+
+FROM alpine:latest
+COPY --from=builder /bin/{{ service_name }} /bin/{{ service_name }}
+
+EXPOSE 8080
+CMD ["/bin/{{ service_name }}"]
+{% elif language == "typescript" %}
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY src/package*.json ./
+RUN npm ci
+COPY src/ .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+EXPOSE 8080
+CMD ["node", "dist/main.js"]
+{% endif %}
