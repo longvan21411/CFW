@@ -1,0 +1,82 @@
+name: Scaffold Cloud Native Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      correlation_id:
+        description: "Backburner correlation ID — used to match this run during polling"
+        required: true
+      parameters:
+        description: "JSON blob of user inputs collected by Backburner"
+        required: true
+
+# IMPORTANT: Backburner identifies this run by searching for a run whose
+# name matches "backburner-{correlationId}". Do not change this format.
+run-name: backburner-${{ inputs.correlation_id }}
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout template repo
+        uses: actions/checkout@v4
+
+      # Pull each value out of the JSON parameters blob.
+      # jq is available on all GitHub-hosted runners.
+      - name: Parse parameters
+        id: params
+        run: |
+          PARAMS='${{ inputs.parameters }}'
+          echo "service_name=$(echo "$PARAMS"   | jq -r '.service_name')"    >> $GITHUB_OUTPUT
+          echo "language=$(echo "$PARAMS"        | jq -r '.language')"        >> $GITHUB_OUTPUT
+          echo "destination_org=$(echo "$PARAMS" | jq -r '.destination_org')" >> $GITHUB_OUTPUT
+          echo "destination_repo=$(echo "$PARAMS"| jq -r '.destination_repo')">> $GITHUB_OUTPUT
+
+      - name: Install copier
+        run: pip install copier
+
+      # Run copier non-interactively.
+      # --defaults  → use copier.yml defaults for any variable not provided via --data
+      # --overwrite → don't prompt if output directory already exists
+      # --data      → pass each variable explicitly; mirrors the parameters above
+      #
+      # We copy FROM "." (repo root) so copier picks up copier.yml and finds
+      # the skeleton under the _subdirectory defined there (template/).
+      - name: Scaffold project with copier
+        run: |
+          copier copy . /tmp/scaffolded \
+            --defaults \
+            --overwrite \
+            --data "service_name=${{ steps.params.outputs.service_name }}" \
+            --data "language=${{ steps.params.outputs.language }}" \
+            --data "destination_org=${{ steps.params.outputs.destination_org }}" \
+            --data "destination_repo=${{ steps.params.outputs.destination_repo }}"
+
+      # SCAFFOLD_PAT must be a Personal Access Token with "repo" scope,
+      # stored as a secret in THIS template repository.
+      # The default GITHUB_TOKEN only has permissions on this repo,
+      # so it cannot create repos in the destination org.
+      - name: Create destination GitHub repository
+        env:
+          GH_TOKEN: ${{ secrets.SCAFFOLD_PAT }}
+        run: |
+          gh repo create \
+            "${{ steps.params.outputs.destination_org }}/${{ steps.params.outputs.destination_repo }}" \
+            --public \
+            --description "Scaffolded by Backburner from cloud-native-service-template"
+
+      - name: Push scaffolded code to new repo
+        env:
+          GH_TOKEN: ${{ secrets.SCAFFOLD_PAT }}
+        run: |
+          cd /tmp/scaffolded
+          git init
+          git config user.email "backburner-bot@noreply.github.com"
+          git config user.name "Backburner"
+          git add .
+          git commit -m "chore: initial scaffold from cloud-native-service-template"
+          git remote add origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ steps.params.outputs.destination_org }}/${{ steps.params.outputs.destination_repo }}.git"
+          git branch -M main
+          git push -u origin main
