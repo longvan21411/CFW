@@ -1,0 +1,51 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: cloud-native-go-service
+  title: Cloud Native Go Service
+  description: Scaffold a new cloud-native microservice based on GO with Docker and GitHub Actions CI
+  tags:
+    - cloud
+    - service
+    - docker
+  annotations:
+    backburner.io/workflow: .github/workflows/scaffold.yml
+    backburner.io/category: Cloud-Native
+    backburner.io/build-time: ~3min
+    backburner.io/usage-count: "0"
+    backburner.io/is-starter: "true"
+    backburner.io/creates-repo: "true"
+spec:
+  owner: team-platform
+  type: service
+  lifecycle: stable
+  parameters:
+    - title: Service Details
+      required:
+        - service_name
+        - language
+        - destination_org
+        - destination_repo
+      properties:
+        service_name:
+          title: Service Name
+          type: string
+          description: Name of the service — used in code and as the package name
+          pattern: "^[a-z][a-z0-9-]*$"
+          minLength: 2
+        language:
+          title: Language
+          type: string
+          enum:
+            - python
+            - go
+            - typescript
+        destination_org:
+          title: GitHub Organization
+          type: string
+          description: GitHub org where the new repository will be created
+        destination_repo:
+          title: Repository Name
+          type: string
+          description: Name of the new repository (must not already exist)
+          pattern: "^[a-z][a-z0-9-]*$"

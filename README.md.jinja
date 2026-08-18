@@ -1,0 +1,36 @@
+# {{ service_name }}
+
+A cloud-native **{{ language }}** service scaffolded by [Backburner](https://github.com/your-org/backburner).
+
+## Getting Started
+
+### Run locally
+
+```bash
+docker build -t {{ service_name }} .
+docker run -p 8080:8080 {{ service_name }}
+```
+
+### Development
+
+{% if language == "python" %}
+```bash
+pip install -r requirements.txt
+python src/main.py
+```
+{% elif language == "go" %}
+```bash
+go run src/main.go
+```
+{% elif language == "typescript" %}
+```bash
+npm install
+npm run dev
+```
+{% endif %}
+
+## Repository
+
+- **Org**: {{ destination_org }}
+- **Repo**: {{ destination_repo }}
+- **Language**: {{ language }}
