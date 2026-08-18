@@ -1,0 +1,28 @@
+# Copier template configuration
+# The skeleton lives inside skeleton/ — copier only renders files from there.
+_subdirectory: skeleton
+_templates_suffix: .jinja
+
+# These variables are passed via --data flags from the scaffold workflow.
+# They mirror the parameters declared in backburner.yml so Backburner
+# can pass them directly without any manual mapping.
+
+service_name:
+  type: str
+  help: "Name of the service (lowercase, hyphens allowed)"
+
+language:
+  type: str
+  help: "Programming language for the service"
+  choices:
+    - python
+    - go
+    - typescript
+
+destination_org:
+  type: str
+  help: "GitHub organization that will own the new repo"
+
+destination_repo:
+  type: str
+  help: "Name of the new GitHub repository"
