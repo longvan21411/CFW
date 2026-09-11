@@ -68,8 +68,8 @@ spec:
       name: Publish to GitHub
       action: publish:github
       input:        
-        description: Scaffolded from Cloud Native Go Service template
-        repoUrl: github.com?owner=${{ parameters.destination_org }}&repo=${{ parameters.destination_repo }}
+        description: Scaffolded from Cloud Native Go Service template        
+        repoUrl: github.boschdevcloud.com?owner=${{ parameters.destination_org }}&repo=${{ parameters.destination_repo }}
 
     - id: register-catalog
       name: Register Component in Catalog
