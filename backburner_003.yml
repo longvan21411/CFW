@@ -3,6 +3,7 @@ kind: Template
 metadata:
   name: cloud-native-go-service-02
   title: Cloud Native Go Service-02
+  namespace: default
   description: Scaffold a new cloud-native microservice based on GO with Docker and GitHub Actions CI
   tags:
     - cloud
