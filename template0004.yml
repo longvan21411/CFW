@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: cloud-native-go-service-06
-  title: Cloud Native Go Service-06
+  name: cloud-native-go-service-07
+  title: Cloud Native Go Service-07
   namespace: default
   description: Scaffold a new cloud-native microservice based on GO with Docker and GitHub Actions CI
   tags:
