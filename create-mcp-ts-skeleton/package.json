@@ -1,0 +1,6 @@
+{
+  "name": "${{ values.mcpName }}",
+  "version": "1.0.0",
+  "description": "${{ values.description }}",
+  "type": "module"
+}
