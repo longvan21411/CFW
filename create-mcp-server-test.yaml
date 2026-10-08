@@ -1,0 +1,189 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-mcp-server
+  title: Create a New MCP Server
+  description: >
+    Scaffold a new MCP server project from scratch. Choose TypeScript or Python,
+    set the risk tier, and get a working stub with MCP.md documentation and a
+    catalog-info.yaml ready to register in the MCP Registry.
+  tags:
+    - mcp
+    - ai
+    - cfw-frame
+    - mcp-server
+spec:
+  owner: group:cfw-core-team
+  type: service
+
+  parameters:
+    - title: MCP Server details
+      required:
+        - mcpName
+        - title
+        - description
+        - owner
+        - riskTier
+        - framework
+      properties:
+        mcpName:
+          title: Server ID
+          type: string
+          description: Unique slug (lowercase letters and hyphens only). Used as the project directory name.
+          pattern: '^[a-z][a-z0-9-]*$'
+          ui:autofocus: true
+        title:
+          title: Display Name
+          type: string
+          description: Human-readable name shown in the MCP Registry.
+        description:
+          title: Description
+          type: string
+          description: What tools or resources does this server expose? One or two sentences.
+          ui:widget: textarea
+          ui:options:
+            rows: 3
+        owner:
+          title: Owner
+          type: string
+          description: Team or user responsible for maintaining this server.
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+              - User
+        riskTier:
+          title: Risk Tier
+          type: string
+          description: >
+            Classify the server's risk level. Users will be warned before
+            connecting to write-capable or deploy-capable servers.
+          default: read-only
+          enum:
+            - read-only
+            - write-capable
+            - deploy-capable
+          enumNames:
+            - Read-only — queries data, no side effects
+            - Write-capable — modifies files, records, or state
+            - Deploy-capable — triggers deployments or infrastructure changes
+        framework:
+          title: Framework
+          type: string
+          description: Language and SDK to scaffold the project with.
+          default: typescript
+          enum:
+            - typescript
+            - python
+          enumNames:
+            - TypeScript (MCP SDK)
+            - Python (FastMCP)
+
+    - title: Target repository
+      required:
+        - targetRepoUrl
+      properties:
+        targetRepoUrl:
+          title: Target Repository
+          type: string
+          description: Repository to open the pull request against.
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              - github.boschdevcloud.com
+
+  steps:
+    ###- id: get-git-user
+      ###name: Get GitHub Username
+      ###action: custom:http:external-request
+      ###input:
+        ###url: https://github.boschdevcloud.com/api/v3/user
+        ###method: GET
+        ###headers:
+          ###Authorization: Bearer ${{ secrets.USER_OAUTH_TOKEN }}
+          ###Accept: application/vnd.github+json
+  
+    - id: fetch-ts
+      name: Render TypeScript scaffold
+      if: ${{ parameters.framework === 'typescript' }}
+      action: fetch:template
+      input:
+        url: ./create-mcp-ts-skeleton
+        values:
+          mcpName: ${{ parameters.mcpName }}
+          title: ${{ parameters.title }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          riskTier: ${{ parameters.riskTier }}
+
+    - id: fetch-py
+      name: Render Python scaffold
+      if: ${{ parameters.framework === 'python' }}
+      action: fetch:template
+      input:
+        url: ./create-mcp-py-skeleton
+        values:
+          mcpName: ${{ parameters.mcpName }}
+          title: ${{ parameters.title }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          riskTier: ${{ parameters.riskTier }}
+          
+    ### try to fix the create-mcp-server      
+    ###- id: create-repo
+      ###name: Create target repository
+      ###action: github:repo:create
+      ###input:
+        #repoUrl: github.boschdevcloud.com?owner=bios-m-cf&repo=${{ parameters.mcpName }}
+        #repoUrl: github.boschdevcloud.com?owner=bb-mcps&repo=${{ parameters.mcpName }}
+        ###repoUrl: ${{ parameters.targetRepoUrl }}
+        ###description: ${{ parameters.description }}
+        ###repoVisibility: internal
+        ###autoInit: true
+    
+    - id: pr
+      name: Open pull request
+      action: publish:github:pull-request
+      input:
+        repoUrl: ${{ parameters.targetRepoUrl }}
+        #repoUrl: "github.boschdevcloud.com?repo='${{ parameters.mcpName }}'&owner=bios-m-cf"
+        branchName: create-mcp-${{ parameters.mcpName }}
+        targetPath: ${{ parameters.mcpName }}
+        title: "feat: add MCP server '${{ parameters.title }}'"
+        description: |
+          Adds a new MCP server **${{ parameters.title }}** scaffolded from the backBurner template.
+
+          | Field | Value |
+          |---|---|
+          | Framework | `${{ parameters.framework }}` |
+          | Risk tier | `${{ parameters.riskTier }}` |
+          | Owner | ${{ parameters.owner }} |
+
+          ### What's included
+
+          - Runnable MCP server stub with one example tool
+          - `MCP.md` — documentation template (fill in your tools and usage examples)
+          - `catalog-info.yaml` — catalog entity ready to register in the MCP Registry
+
+          ### Next steps
+
+          1. Merge this PR.
+          2. Implement your tools in the server stub.
+          3. Update `MCP.md` with real tool descriptions and usage examples.
+          4. Deploy the server and note its endpoint URL.
+          5. Register it in the MCP Registry using the **Bring Your Own MCP Server** workflow.
+        commitMessage: "feat: scaffold MCP server ${{ parameters.mcpName }}"
+
+  output:
+    links:
+      - title: Open Pull Request
+        url: ${{ steps['pr'].output.remoteUrl }}
+        icon: github
+    text:
+      - title: Next steps
+        content: |
+          After merging, implement your tools and deploy the server.
+
+          Then register it in the MCP Registry using the
+          **Bring Your Own MCP Server** workflow so others can discover and connect to it.
