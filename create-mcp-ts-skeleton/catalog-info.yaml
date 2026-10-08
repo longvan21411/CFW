@@ -1,0 +1,25 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ${{ values.mcpName }}
+  title: ${{ values.title }}
+  description: ${{ values.description }}
+  annotations:
+    cfw.bosch.com/mcp-risk-tier: ${{ values.riskTier }}
+    backstage.io/source-location: url:https://github.com/TODO/tree/main/
+  tags:
+    - mcp
+spec:
+  type: mcp-server
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  definition: |
+    {
+      "remotes": [
+        {
+          "url": "https://TODO_REPLACE_WITH_DEPLOYED_ENDPOINT",
+          "transport": "sse",
+          "description": "${{ values.description }}"
+        }
+      ]
+    }
