@@ -30,12 +30,23 @@ spec:
         repoUrl:
           title: Repository Location
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            requestUserCredentials:
-              secretsKey: USER_OAUTH_TOKEN
-            allowedHosts:
-              - github.boschdevcloud.com
+          default: github.boschdevcloud.com?
+          #ui:field: RepoUrlPicker
+          # ui:options:
+          #   requestUserCredentials:
+          #     secretsKey: USER_OAUTH_TOKEN
+          #   allowedHosts:
+          #     - github.boschdevcloud.com
+      properties:
+        repoOwner:
+          title: Repository Owner
+          type: string
+          default: cfw-pmt-testorg
+      properties:
+        repo:
+          title: Repository name
+          type: string
+          default: tvv2hc-test-0001
     - title: Remote Development Environment Information
       required:
         - coderToken
@@ -126,8 +137,9 @@ spec:
       name: Create New Repository
       action: publish:github
       input:
+        allowedHosts: github.boschdevcloud.com
         description: This is test repository ${{ (parameters.repoUrl | parseRepoUrl).repo }}
-        repoUrl: ${{ parameters.repoUrl }}
+        repoUrl: github.boschdevcloud.com?owner=${{ parameters.repoUrl }}&repo=${{ parameters.repoUrl }}
         defaultBranch: main
         #token: ${{ secrets.USER_OAUTH_TOKEN }}
         collaborators:
