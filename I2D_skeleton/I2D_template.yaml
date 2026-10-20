@@ -164,6 +164,8 @@ spec:
       name: Register to Common Frameworks
       action: catalog:register
       input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /Catalog.yaml
         catalogInfoUrl: https://${{ (parameters.repoUrl | parseRepoUrl).host }}/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}/blob/main/Catalog.yaml
   output:    
     links:
