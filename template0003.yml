@@ -26,7 +26,7 @@ spec:
       required:
         - service_name
         - language
-        - destination_org
+        - destination_owner
         - destination_repo
       properties:
         service_name:
@@ -42,10 +42,10 @@ spec:
             - python
             - go
             - typescript
-        destination_org:
-          title: GitHub Organization
+        destination_owner:
+          title: GitHub Owner
           type: string
-          description: GitHub org where the new repository will be created
+          description: GitHub owner where the new repository will be created
         destination_repo:
           title: Repository Name
           type: string
@@ -70,7 +70,7 @@ spec:
       input:
         allowedHosts: ['github.com', 'github.boschdevcloud.com']
         description: Scaffolded from Cloud Native Go Service template
-        repoUrl: github.com?owner=${{ parameters.destination_org }}&repo=${{ parameters.destination_repo }}
+        repoUrl: github.boschdevcloud.com?owner=${{ parameters.destination_owner }}&repo=${{ parameters.destination_repo }}
 
     - id: register-catalog
       name: Register Component in Catalog
