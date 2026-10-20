@@ -129,7 +129,7 @@ spec:
         description: This is test repository ${{ (parameters.repoUrl | parseRepoUrl).repo }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
-        token: ${{ secrets.USER_OAUTH_TOKEN }}
+        #token: ${{ secrets.USER_OAUTH_TOKEN }}
         collaborators:
           - user: WED3KOR
             access: read
