@@ -1,7 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: i2d-template-info # Change it manually {{ cookiecutter.repository_name }}
+  #name: i2d-template-info # Change it manually {{ cookiecutter.repository_name }}
+  name: {{ cookiecutter.repository_name | lower | replace("_", "-") }}
   tags:
     - agent-sdk
   annotations:
