@@ -8,8 +8,8 @@ metadata:
     backstage.io/view-url: https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/blob/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
     backstage.io/edit-url: https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/edit/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
     backstage.io/source-location: url:https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/tree/main/i2d-agent-sdk-template/
-  name: hgc1hc-i2d-agent-sdk-template
-  title: Agent Orbit - I2D Agent SDK Template - HGC1HC
+  name: tvv2hc-i2d-agent-sdk-template
+  title: Agent Orbit - I2D Agent SDK Template - TVV2hc
   description: A unified Python meta-wrapper that lets any team build AI agents
     using a clean, standardized interface — regardless of which backend
     (LangGraph, AutoGen, OpenAI Agents SDK, Claude SDK) is running underneath.
