@@ -1,0 +1,33 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: {{ cookiecutter.repository_name }}
+  tags:
+    - agent-sdk
+  annotations:
+    github.com/project-slug: {{ cookiecutter.projectSlug }}
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/source-template: template:default/{{ cookiecutter.template_name }}
+  links:
+    - url: '{{ cookiecutter.frameUrl }}/catalog/default/template/{{ cookiecutter.template_name }}'
+      title: "{{ cookiecutter.template_title }}"
+      icon: 'link'
+    - url: '{{ cookiecutter.serverURL }}/@{{ cookiecutter.gitUsername }}/ws-agent-sdk-{{ cookiecutter.repository_name }}/apps/code-server/?folder=/home/coder/{{ cookiecutter.repository_name }}'
+      title: Open Web IDE
+      icon: externalLink
+    - url: 'vscode://coder.coder-remote/open?url={{ cookiecutter.serverURL }}&owner={{ cookiecutter.gitUsername }}&workspace=ws-agent-sdk-{{ cookiecutter.repository_name }}&agent=main&folder=/home/coder/{{ cookiecutter.repository_name }}'
+      title: Open in VS Code
+      icon: externalLink
+    - url: '{{ cookiecutter.serverURL }}/@{{ cookiecutter.gitUsername }}/ws-agent-sdk-{{ cookiecutter.repository_name }}.main/terminal?folder=/home/coder/{{ cookiecutter.repository_name }}'
+      title: Open Terminal
+      icon: externalLink
+    - url: 'https://filebrowser--ws-agent-sdk-{{ cookiecutter.repository_name }}--{{ cookiecutter.gitUsername }}.cfw-ide.azure-dev.mobility-commonframeworks.bosch.tech/files/{{ cookiecutter.repository_name }}'
+      title: Open File Browser
+      icon: externalLink
+spec:
+  type: service
+  owner: {{ cookiecutter.selected_group }}
+  lifecycle: experimental
+  system: cfw
+  dependsOn:
+    - template:default/{{ cookiecutter.template_name }}
