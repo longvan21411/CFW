@@ -31,13 +31,7 @@ spec:
         repoUrl:
           title: Repository Location
           type: string
-          default: github.boschdevcloud.com?
-          # ui:field: RepoUrlPicker
-          # ui:options:
-          #   requestUserCredentials:
-          #     secretsKey: USER_OAUTH_TOKEN
-          #   allowedHosts:
-          #     - github.boschdevcloud.com
+          default: github.boschdevcloud.com?        
         repoOwner:
           title: Repository Owner
           type: string
@@ -52,16 +46,6 @@ spec:
         - serverURL
         - templateName
       properties:
-        coderToken:
-          title: Workspace Provisioning Token
-          type: string
-          description: Enter your access token to provision the remote development workspace. Create a token from your account’s token settings.
-          ui:field: Secret
-          ui:backstage:review.show: false
-        serverURL:
-          title: Coder Server URL
-          type: string
-          default: https://cfw-ide.azure-dev.mobility-commonframeworks.bosch.tech
         templateName:
           title: Coder Template Name
           type: string
@@ -80,15 +64,7 @@ spec:
     #       template_title: I2D Agent SDK Template
     #       frameUrl: ${{ environment.parameters.baseUrl }}
     #       selected_group: group:default/idm2bcd_cfw_admin_internal
-    # - id: get-git-user
-    #   name: Prepare Workspace Identity
-    #   action: custom:http:external-request
-    #   input:
-    #     url: https://github.boschdevcloud.com/api/v3/user
-    #     method: GET
-    #     headers:
-    #       Authorization: Bearer ${{ secrets.USER_OAUTH_TOKEN }}
-    #       Accept: application/vnd.github+json
+   
     - id: render-catalog
       name: Render Catalog Descriptor
       action: fetch:template:file
@@ -105,28 +81,8 @@ spec:
           template_title: I2D Agent SDK Template
           frameUrl: ${{ environment.parameters.baseUrl }}
           selected_group: group:default/idm2bcd_cfw_admin_internal
-          serverURL: ${{ parameters.serverURL }}
-          # gitUsername: ${{ steps['get-git-user'].output.body.login }}
-    # - id: get-coder-user
-    #   name: Verify Coder Access
-    #   action: custom:http:external-request
-    #   input:
-    #     method: GET
-    #     url: ${{ parameters.serverURL }}/api/v2/users/me
-    #     useBackstageToken: false
-    #     headers:
-    #       Coder-Session-Token: ${{ secrets.coderToken }}
-    #       Accept: application/json
-    # - id: get-coder-template
-    #   name: Prepare Workspace Configuration
-    #   action: custom:http:external-request
-    #   input:
-    #     method: GET
-    #     url: ${{ parameters.serverURL }}/api/v2/organizations/default/templates/${{ parameters.templateName }}
-    #     useBackstageToken: false
-    #     headers:
-    #       Coder-Session-Token: ${{ secrets.coderToken }}
-    #       Accept: application/json
+          serverURL: ${{ parameters.serverURL }}          
+    
     - id: publish
       name: Create New Repository
       action: publish:github
@@ -137,35 +93,11 @@ spec:
         collaborators:
           - user: WED3KOR
             access: read
-    # - id: create-coder-workspace
-    #   name: Provision Remote Development Environment
-    #   action: custom:http:external-request
-    #   input:
-    #     method: POST
-    #     url: ${{ parameters.serverURL }}/api/v2/organizations/${{ steps['get-coder-user'].output.body.organization_ids[0] }}/members/${{ steps['get-coder-user'].output.body.id }}/workspaces
-    #     useBackstageToken: false
-    #     headers:
-    #       Coder-Session-Token: ${{ secrets.coderToken }}
-    #       Content-Type: application/json
-    #     body: |
-    #       {
-    #         "name": "ws-agent-sdk-${{ (parameters.repoUrl | parseRepoUrl).repo }}",
-    #         "template_id": "${{ steps['get-coder-template'].output.body.id }}",
-    #         "rich_parameter_values": [
-    #           {"name": "git_username", "value": "${{ steps['get-git-user'].output.body.login }}"},
-    #           {"name": "git_token", "value": "${{ secrets.USER_OAUTH_TOKEN }}"},
-    #           {"name": "repo_name", "value": "${{ (parameters.repoUrl | parseRepoUrl).repo }}"},
-    #           {"name": "repo_owner", "value": "${{ (parameters.repoUrl | parseRepoUrl).owner }}"},
-    #           {"name": "username", "value": "${{ steps['get-git-user'].output.body.login }}"},
-    #           {"name": "user_email", "value": "${{ steps['get-git-user'].output.body.login }}@bosch.com"}
-    #         ]
-    #       }
+    
     - id: register
       name: Register to Common Frameworks
       action: catalog:register
-      input:
-        #repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        #catalogInfoPath: /Catalog.yaml
+      input:       
         catalogInfoUrl: https://${{ (parameters.repoUrl | parseRepoUrl).host }}/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}/blob/main/Catalog.yaml
   output:    
     links:
@@ -174,15 +106,4 @@ spec:
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps['register'].output.entityRef }}
-      # - title: Open Web IDE
-      #   icon: externalLink
-      #   url: ${{ parameters.serverURL }}/@${{ steps['get-git-user'].output.body.login }}/ws-agent-sdk-${{ (parameters.repoUrl | parseRepoUrl).repo }}/apps/code-server/?folder=/home/coder/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-      # - title: Open VS Code
-      #   icon: externalLink
-      #   url: vscode://coder.coder-remote/open?url=${{ parameters.serverURL }}&owner=${{ steps['get-git-user'].output.body.login }}&workspace=ws-agent-sdk-${{ (parameters.repoUrl | parseRepoUrl).repo }}&agent=main&folder=/home/coder/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-      # - title: Open Terminal
-      #   icon: externalLink
-      #   url: ${{ parameters.serverURL }}/@${{ steps['get-git-user'].output.body.login }}/ws-agent-sdk-${{ (parameters.repoUrl | parseRepoUrl).repo }}.main/terminal?folder=/home/coder/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-      # - title: Open File Browser
-      #   icon: externalLink
-      #   url: https://filebrowser--ws-agent-sdk-${{ (parameters.repoUrl | parseRepoUrl).repo }}--${{ steps['get-git-user'].output.body.login }}.cfw-ide.azure-dev.mobility-commonframeworks.bosch.tech/files/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+     
