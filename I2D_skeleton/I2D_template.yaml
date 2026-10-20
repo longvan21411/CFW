@@ -57,20 +57,20 @@ spec:
           type: string
           default: i2d-bsw-development-template
   steps:
-    - id: fetch-base
-      name: Fetch Template Structure
-      action: fetch:template
-      input:
-        url: https://github.boschdevcloud.com/ETH-Incubation/i2d-agent-sdk
-        cookiecutterCompat: true
-        values:
-          repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
-          projectSlug: ${{ (parameters.repoUrl | parseRepoUrl).owner}}/${{
-            (parameters.repoUrl | parseRepoUrl).repo }}
-          template_name: i2d-agent-sdk-template
-          template_title: I2D Agent SDK Template
-          frameUrl: ${{ environment.parameters.baseUrl }}
-          selected_group: group:default/idm2bcd_cfw_admin_internal
+    # - id: fetch-base
+    #   name: Fetch Template Structure
+    #   action: fetch:template
+    #   input:
+    #     url: https://github.boschdevcloud.com/ETH-Incubation/i2d-agent-sdk
+    #     cookiecutterCompat: true
+    #     values:
+    #       repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+    #       projectSlug: ${{ (parameters.repoUrl | parseRepoUrl).owner}}/${{
+    #         (parameters.repoUrl | parseRepoUrl).repo }}
+    #       template_name: i2d-agent-sdk-template
+    #       template_title: I2D Agent SDK Template
+    #       frameUrl: ${{ environment.parameters.baseUrl }}
+    #       selected_group: group:default/idm2bcd_cfw_admin_internal
     # - id: get-git-user
     #   name: Prepare Workspace Identity
     #   action: custom:http:external-request
