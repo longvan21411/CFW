@@ -93,7 +93,7 @@ spec:
       name: Render Catalog Descriptor
       action: fetch:template:file
       input:
-        url: ./Catalog.yaml
+        url: /Catalog.yaml
         targetPath: Catalog.yaml
         cookiecutterCompat: true
         replace: true
