@@ -131,7 +131,7 @@ spec:
       name: Create New Repository
       action: publish:github
       input:
-        allowedHosts: github.boschdevcloud.com
+        #allowedHosts: github.boschdevcloud.com
         description: This is test repository ${{ (parameters.repoUrl | parseRepoUrl).repo }}
         repoUrl: github.boschdevcloud.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
         defaultBranch: main
