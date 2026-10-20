@@ -3,11 +3,11 @@ kind: Template
 metadata:
   namespace: default
   annotations:
-    backstage.io/managed-by-location: url:https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/blob/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
-    backstage.io/managed-by-origin-location: url:https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/blob/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
-    backstage.io/view-url: https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/blob/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
-    backstage.io/edit-url: https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/edit/main/i2d-agent-sdk-template/i2d-agent-sdk-template.yaml
-    backstage.io/source-location: url:https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/tree/main/i2d-agent-sdk-template/
+    backstage.io/managed-by-location: url:https://github.com/longvan21411/CFW/edit/upload_template/I2D_skeleton/I2D_template.yaml
+    backstage.io/managed-by-origin-location: url:https://github.com/longvan21411/CFW/edit/upload_template/I2D_skeleton/I2D_template.yaml
+    backstage.io/view-url: https://github.com/longvan21411/CFW/edit/upload_template/I2D_skeleton/I2D_template.yaml
+    backstage.io/edit-url: https://github.com/longvan21411/CFW/edit/upload_template/I2D_skeleton/I2D_template.yaml
+    backstage.io/source-location: url:https://github.com/longvan21411/CFW/edit/upload_template/I2D_skeleton/
   name: tvv2hc-i2d-agent-sdk-template
   title: Agent Orbit - I2D Agent SDK Template - TVV2HC
   description: >-
