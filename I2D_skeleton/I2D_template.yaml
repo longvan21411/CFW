@@ -41,9 +41,7 @@ spec:
           type: string
           default: tvv2hc-test-0001
     - title: Remote Development Environment Information
-      required:
-        - coderToken
-        - serverURL
+      required:       
         - templateName
       properties:
         templateName:
