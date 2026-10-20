@@ -10,13 +10,14 @@ metadata:
     backstage.io/source-location: url:https://github.boschdevcloud.com/cfw-pmt-testorg/bb-integration-i2d-template/tree/main/i2d-agent-sdk-template/
   name: tvv2hc-i2d-agent-sdk-template
   title: Agent Orbit - I2D Agent SDK Template - TVV2HC
-  description: A unified Python meta-wrapper that lets any team build AI agents
+  description: >-
+    A unified Python meta-wrapper that lets any team build AI agents
     using a clean, standardized interface — regardless of which backend
     (LangGraph, AutoGen, OpenAI Agents SDK, Claude SDK) is running underneath.
   tags:
     - v1
     - i2d-agent-sdk
-  
+
 spec:
   owner: group:default/idm2bcd_cfw_admin_internal
   type: service
@@ -31,19 +32,17 @@ spec:
           title: Repository Location
           type: string
           default: github.boschdevcloud.com?
-          #ui:field: RepoUrlPicker
+          # ui:field: RepoUrlPicker
           # ui:options:
           #   requestUserCredentials:
           #     secretsKey: USER_OAUTH_TOKEN
           #   allowedHosts:
           #     - github.boschdevcloud.com
-      properties:
         repoOwner:
           title: Repository Owner
           type: string
           default: cfw-pmt-testorg
-      properties:
-        repo:
+        repoName:
           title: Repository name
           type: string
           default: tvv2hc-test-0001
@@ -76,8 +75,7 @@ spec:
     #     cookiecutterCompat: true
     #     values:
     #       repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
-    #       projectSlug: ${{ (parameters.repoUrl | parseRepoUrl).owner}}/${{
-    #         (parameters.repoUrl | parseRepoUrl).repo }}
+    #       projectSlug: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
     #       template_name: i2d-agent-sdk-template
     #       template_title: I2D Agent SDK Template
     #       frameUrl: ${{ environment.parameters.baseUrl }}
@@ -91,7 +89,6 @@ spec:
     #     headers:
     #       Authorization: Bearer ${{ secrets.USER_OAUTH_TOKEN }}
     #       Accept: application/vnd.github+json
-
     - id: render-catalog
       name: Render Catalog Descriptor
       action: fetch:template:file
@@ -109,8 +106,7 @@ spec:
           frameUrl: ${{ environment.parameters.baseUrl }}
           selected_group: group:default/idm2bcd_cfw_admin_internal
           serverURL: ${{ parameters.serverURL }}
-          #gitUsername: ${{ steps['get-git-user'].output.body.login }}
-
+          # gitUsername: ${{ steps['get-git-user'].output.body.login }}
     # - id: get-coder-user
     #   name: Verify Coder Access
     #   action: custom:http:external-request
@@ -121,7 +117,6 @@ spec:
     #     headers:
     #       Coder-Session-Token: ${{ secrets.coderToken }}
     #       Accept: application/json
-
     # - id: get-coder-template
     #   name: Prepare Workspace Configuration
     #   action: custom:http:external-request
@@ -132,20 +127,18 @@ spec:
     #     headers:
     #       Coder-Session-Token: ${{ secrets.coderToken }}
     #       Accept: application/json
-
     - id: publish
       name: Create New Repository
       action: publish:github
       input:
         allowedHosts: github.boschdevcloud.com
         description: This is test repository ${{ (parameters.repoUrl | parseRepoUrl).repo }}
-        repoUrl: github.boschdevcloud.com?owner=${{ parameters.repoUrl }}&repo=${{ parameters.repoUrl }}
+        repoUrl: github.boschdevcloud.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
         defaultBranch: main
-        #token: ${{ secrets.USER_OAUTH_TOKEN }}
+        # token: ${{ secrets.USER_OAUTH_TOKEN }}
         collaborators:
           - user: WED3KOR
             access: read
-
     # - id: create-coder-workspace
     #   name: Provision Remote Development Environment
     #   action: custom:http:external-request
@@ -169,14 +162,11 @@ spec:
     #           {"name": "user_email", "value": "${{ steps['get-git-user'].output.body.login }}@bosch.com"}
     #         ]
     #       }
-
     - id: register
       name: Register to Common Frameworks
       action: catalog:register
       input:
-        catalogInfoUrl: https://${{ (parameters.repoUrl | parseRepoUrl).host }}/${{
-          (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl |
-          parseRepoUrl).repo }}/blob/main/Catalog.yaml
+        catalogInfoUrl: https://${{ (parameters.repoUrl | parseRepoUrl).host }}/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}/blob/main/Catalog.yaml
   output:    
     links:
       - title: Repository
